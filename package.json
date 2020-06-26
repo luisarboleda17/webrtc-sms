@@ -4,6 +4,7 @@
   "description": "Can you join me? application for webRTC.ventures coding challenge",
   "main": "index.js",
   "scripts": {
+    "local": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
