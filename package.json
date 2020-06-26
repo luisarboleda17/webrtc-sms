@@ -4,6 +4,7 @@
   "description": "Can you join me? application for webRTC.ventures coding challenge",
   "main": "index.js",
   "scripts": {
+    "local": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -21,5 +22,15 @@
   "bugs": {
     "url": "https://github.com/luisarboleda17/webrtc-sms/issues"
   },
-  "homepage": "https://github.com/luisarboleda17/webrtc-sms#readme"
+  "homepage": "https://github.com/luisarboleda17/webrtc-sms#readme",
+  "dependencies": {
+    "@hapi/boom": "^9.1.0",
+    "@hapi/hapi": "^19.1.1",
+    "@hapi/joi": "^17.1.1",
+    "dotenv": "^8.2.0",
+    "nexmo": "^2.7.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  }
 }
