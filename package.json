@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/luisarboleda17/webrtc-sms#readme",
   "dependencies": {
-    "@hapi/hapi": "^19.1.1"
+    "@hapi/hapi": "^19.1.1",
+    "nexmo": "^2.7.0"
   }
 }
