@@ -1,7 +1,7 @@
 {
-  "name": "webrtc-sms",
+  "name": "friends-meet",
   "version": "1.0.0",
-  "description": "Can you join me? application for webRTC.ventures coding challenge",
+  "description": "Friends meet application for webRTC.ventures coding challenge",
   "main": "index.js",
   "scripts": {
     "local": "nodemon index.js",
