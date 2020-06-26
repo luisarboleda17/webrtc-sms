@@ -1,0 +1,25 @@
+{
+  "name": "webrtc-sms",
+  "version": "1.0.0",
+  "description": "Can you join me? application for webRTC.ventures coding challenge",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/luisarboleda17/webrtc-sms.git"
+  },
+  "keywords": [
+    "webrtc",
+    "sms",
+    "vonage",
+    "nexmo"
+  ],
+  "author": "Luis Arboleda",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/luisarboleda17/webrtc-sms/issues"
+  },
+  "homepage": "https://github.com/luisarboleda17/webrtc-sms#readme"
+}
