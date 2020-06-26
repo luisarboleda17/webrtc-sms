@@ -28,5 +28,8 @@
     "@hapi/joi": "^17.1.1",
     "dotenv": "^8.2.0",
     "nexmo": "^2.7.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
   }
 }
