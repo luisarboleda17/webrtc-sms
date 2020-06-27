@@ -2,21 +2,20 @@
 const Hapi = require('@hapi/hapi');
 const routes = require('./routes');
 
-const config = require('./config');
+const defaultConfig = require('./config');
 
 /**
  * Create and set Hapi app
  * @param config
  */
 module.exports = (config = null) => {
-  const defaultConfig = config || {
-    ...config,
-    env: process.env.ENV || 'dev'
-  };
   const app = Hapi.server({
     port: process.env.PORT || 3000,
     host: process.env.HOST || 'localhost',
-    app: defaultConfig
+    app: defaultConfig || {
+      ...config,
+      env: process.env.ENV || 'dev'
+    }
   });
 
   // Add requests logging
