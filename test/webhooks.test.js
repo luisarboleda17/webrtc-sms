@@ -34,6 +34,24 @@ experiment('Webhooks ', () => {
       });
       expect(response.statusCode).to.equal(401);
     });
+
+    test('A valid API key and an invalid receiver is received, then receive unauthorized', async () => {
+      const response = await server.inject({
+        method: 'POST',
+        url: '/webhooks/poll',
+        payload: {
+          "msisdn": hostPhoneNumber,
+          "to": `${server.settings.app.nexmo.senderPhoneNumber}123`,
+          "messageId": "16000002B6F4AC14",
+          "text": "Dear friends, will you join me at 8pm?",
+          "type": "text",
+          "keyword": "DEAR",
+          "api-key": `${server.settings.app.nexmo.apiKey}1`,
+          "message-timestamp": "2020-06-27 05:46:16"
+        }
+      });
+      expect(response.statusCode).to.equal(401);
+    });
   });
 
   experiment('Create a poll', () => {
