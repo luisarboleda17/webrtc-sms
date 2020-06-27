@@ -34,7 +34,6 @@
   "devDependencies": {
     "@hapi/code": "^8.0.1",
     "@hapi/lab": "^22.0.4",
-    "fast-check": "^1.25.1",
     "nodemon": "^2.0.4"
   }
 }
