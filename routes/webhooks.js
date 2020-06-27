@@ -14,7 +14,10 @@ module.exports = [
           msisdn: Joi.string().min(4).required(),
           to: Joi.string().min(4).required(),
           messageId: Joi.string().required(),
-          text: Joi.string().min(1).required(),
+          text: Joi.alternatives().try(
+            Joi.string().min(1).trim().pattern(new RegExp('^.*join\\sme.*$')),
+            Joi.string().valid('yes', 'no').insensitive()
+          ).required(),
           type: Joi.string().valid('text').required(),
           "api-key": Joi.string().min(4).required(),
         }).options({ allowUnknown: true, stripUnknown: true, errors: { escapeHtml: true } }).required()
