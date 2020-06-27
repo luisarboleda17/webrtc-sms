@@ -1,6 +1,5 @@
 
 const Nexmo = require('nexmo');
-const boom = require('@hapi/boom');
 
 /**
  * Handle create poll from SMS
