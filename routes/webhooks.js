@@ -33,6 +33,8 @@ module.exports = [
         // Route to controller
         if (messageText.includes(pollConfig.pollCreateKeyword)) {
           return webhooksControllers.createPollFromSMS(request, h);
+        } else if (messageText === 'yes' || messageText === 'no') {
+          return webhooksControllers.answerPollRequest(request, h);
         } else {
           return Boom.badRequest('Unrecognized action');
         }
