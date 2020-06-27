@@ -6,7 +6,7 @@ const { afterEach, beforeEach, test, experiment } = exports.lab = Lab.script();
 const createApp = require('../app');
 const testConfig = require('./config');
 
-experiment('Webhooks ', () => {
+experiment('Webhooks', () => {
   let server;
   const hostPhoneNumber = '50712345678';
 
@@ -70,7 +70,7 @@ experiment('Webhooks ', () => {
       });
 
       test('Invalid text, then receive bad request', async () => {
-        const mockTexts = ['  ', null, undefined, '42+*^^43//(/', '9378//<>>'];
+        const mockTexts = ['  ', null, undefined, '42+*^^43//(/', '9378//<>>', 'Testing if its possible'];
         for (const text of mockTexts) {
           const response = await server.inject({
             method: 'POST',
@@ -192,6 +192,62 @@ experiment('Webhooks ', () => {
     });
 
     test('A valid API key is received and join me command is not included, then receive bad request', async () => {
+      const response = await server.inject({
+        method: 'POST',
+        url: '/webhooks/poll',
+        payload: {
+          "msisdn": hostPhoneNumber,
+          "to": server.settings.app.nexmo.senderPhoneNumber,
+          "messageId": "16000002B6F4AC14",
+          "text": "Testing if this API it's vulnerable.",
+          "type": "text",
+          "keyword": "DEAR",
+          "api-key": server.settings.app.nexmo.apiKey,
+          "message-timestamp": "2020-06-27 05:46:16"
+        }
+      });
+      expect(response.statusCode).to.equal(400);
+    });
+  });
+
+  experiment('Answer to a poll request', () => {
+    test('A valid API key and a positive answer is received, then receive success', async () => {
+      const response = await server.inject({
+        method: 'POST',
+        url: '/webhooks/poll',
+        payload: {
+          "msisdn": hostPhoneNumber,
+          "to": server.settings.app.nexmo.senderPhoneNumber,
+          "messageId": "16000002B6F4AC14",
+          "text": "yes",
+          "type": "text",
+          "keyword": "DEAR",
+          "api-key": server.settings.app.nexmo.apiKey,
+          "message-timestamp": "2020-06-27 05:46:16"
+        }
+      });
+      expect(response.statusCode).to.equal(200);
+    });
+
+    test('A valid API key and a negative answer is received, then receive success', async () => {
+      const response = await server.inject({
+        method: 'POST',
+        url: '/webhooks/poll',
+        payload: {
+          "msisdn": hostPhoneNumber,
+          "to": server.settings.app.nexmo.senderPhoneNumber,
+          "messageId": "16000002B6F4AC14",
+          "text": "No",
+          "type": "text",
+          "keyword": "DEAR",
+          "api-key": server.settings.app.nexmo.apiKey,
+          "message-timestamp": "2020-06-27 05:46:16"
+        }
+      });
+      expect(response.statusCode).to.equal(200);
+    });
+
+    test('A valid API key and another answer is received, then receive bad request', async () => {
       const response = await server.inject({
         method: 'POST',
         url: '/webhooks/poll',
