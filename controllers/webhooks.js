@@ -2,8 +2,6 @@
 const Nexmo = require('nexmo');
 const boom = require('@hapi/boom');
 
-const nexmoConfig = require('../config/nexmo');
-const pollConfig = require('../config/poll');
 const {sanitizeMessage} = require('../utils/sanitize');
 
 /**
@@ -12,10 +10,13 @@ const {sanitizeMessage} = require('../utils/sanitize');
  * @param h
  */
 const pollInboundSMS = (request, h) => {
+  const nexmoConfig = request.server.app.nexmo;
+  const pollConfig = request.server.app.poll;
   const nexmo = new Nexmo({
     apiKey: nexmoConfig.apiKey,
     apiSecret: nexmoConfig.apiSecret
-  }, {debug: process.env.ENV === 'local'});
+  }, {debug: request.server.app.env === 'local'});
+
   const userPhone = request.payload['msisdn'];
   const messageId = request.payload['messageId'];
   const messageText = sanitizeMessage(request.payload['text']);
@@ -42,7 +43,7 @@ const pollInboundSMS = (request, h) => {
         }
       ));
 
-      return {status: 'poll_scheduled'};
+      return {data: true};
     } else {
       return boom.badRequest('Unrecognized message');
     }
