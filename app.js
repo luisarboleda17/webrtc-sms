@@ -12,7 +12,8 @@ module.exports = () => {
     host: process.env.HOST || 'localhost',
     app: {
       name: process.env.APP_NAME || '',
-      env: process.env.ENV || 'dev'}
+      env: process.env.ENV || 'dev'
+    }
   });
 
   // Add requests logging
