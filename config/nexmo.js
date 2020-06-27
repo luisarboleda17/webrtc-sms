@@ -1,7 +1,7 @@
 
 /**
  * Set Nexmo configurations
- * @type {{API_KEY}}
+ * @type {{sendSmsEnabled: boolean, senderPhoneNumber: string, apiKey: string, apiSecret: string}}
  */
 module.exports = {
   sendSmsEnabled: process.env.SEND_SMS_ENABLED === '1',
