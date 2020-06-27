@@ -3,7 +3,7 @@ const Nexmo = require('nexmo');
 const boom = require('@hapi/boom');
 
 const nexmoConfig = require('../config/nexmo');
-const smsConfig = require('../config/sms');
+const pollConfig = require('../config/poll');
 const {sanitizeMessage} = require('../utils/sanitize');
 
 /**
