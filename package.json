@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "local": "nodemon index.js",
-    "test": "lab -v **/*.test.js",
+    "test": "lab -c -v **/*.test.js",
     "test-coverage-html": "lab -r html -o coverage.html"
   },
   "repository": {
