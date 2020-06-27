@@ -10,6 +10,7 @@ const initApp = async () => {
 
     console.info(`${app.settings.app.name} started`);
     console.info(`Environment: ${app.settings.app.env}`);
+    console.info(`SMS enabled: ${app.settings.app.nexmo.sendSmsEnabled}`);
     console.info(`You can access at ${app.info.uri}`);
   } catch(err) {
     console.error('Error starting server', err);
