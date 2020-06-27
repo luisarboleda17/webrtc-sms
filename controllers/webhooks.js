@@ -27,8 +27,8 @@ const pollInboundSMS = (request, h) => {
   if (receivedApiKey === nexmoConfig.apiKey) {
 
     // Validate if it's a join me command
-    if (messageText && messageText === 'join me') { // TODO: Change validation
-      const invitationMessage = `${messageText}. ${smsConfig.pollCreationInstructions}`;
+    if (messageText && messageText.toLowerCase().includes(pollConfig.pollCreateKeyword)) {
+      const invitationMessage = `${messageText}. ${pollConfig.pollCreationInstructions}`;
 
       // Send message to group of people TODO: Add this process to Redis queue
       friendsNumbers.forEach(phoneNumber => nexmo.message.sendSms(
