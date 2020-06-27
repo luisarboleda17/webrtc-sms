@@ -11,6 +11,7 @@ const defaultConfig = require('./config');
 module.exports = (config = null) => {
   const appConfig = config || {
     ...defaultConfig,
+    name: process.env.APP_NAME || '',
     env: process.env.ENV || 'dev'
   };
   const app = Hapi.server({
