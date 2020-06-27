@@ -12,8 +12,8 @@ module.exports = (config = null) => {
   const app = Hapi.server({
     port: process.env.PORT || 3000,
     host: process.env.HOST || 'localhost',
-    app: defaultConfig || {
-      ...config,
+    app: config || {
+      ...defaultConfig,
       env: process.env.ENV || 'dev'
     }
   });
