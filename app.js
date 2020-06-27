@@ -14,5 +14,8 @@ module.exports = () => {
       env: process.env.ENV || 'dev'}
   });
 
+  // Add requests logging
+  app.events.on('response', request => console.log(`${request.info.remoteAddress}: ${request.method.toUpperCase()} ${request.path} --> ${request.response.statusCode}`));
+
   return app;
 }
