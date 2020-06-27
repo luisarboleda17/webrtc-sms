@@ -31,6 +31,8 @@
     "nexmo": "^2.7.0"
   },
   "devDependencies": {
+    "@hapi/code": "^8.0.1",
+    "@hapi/lab": "^22.0.4",
     "nodemon": "^2.0.4"
   }
 }
