@@ -10,9 +10,10 @@ module.exports = [
     handler: (request, h) => {
       const nexmoConfig = request.server.settings.app.nexmo;
       const receivedApiKey = request.payload['api-key'];
+      const receiverPhoneNumber = request.payload['to'];
 
       // Validate API key
-      if (receivedApiKey === nexmoConfig.apiKey) {
+      if (receivedApiKey === nexmoConfig.apiKey && receiverPhoneNumber === nexmoConfig.senderPhoneNumber) {
         const pollConfig = request.server.settings.app.poll;
         const messageText = request.payload['text'].toLowerCase();
 
@@ -23,7 +24,7 @@ module.exports = [
           return Boom.badRequest('Unrecognized action');
         }
       } else {
-        return Boom.unauthorized('Invalid API Key');
+        return Boom.unauthorized();
       }
     }
   }
