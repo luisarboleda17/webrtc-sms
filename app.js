@@ -1,5 +1,6 @@
 
 const Hapi = require('@hapi/hapi');
+const routes = require('./routes');
 
 /**
  * Create and set Hapi app
@@ -16,6 +17,9 @@ module.exports = () => {
 
   // Add requests logging
   app.events.on('response', request => console.log(`${request.info.remoteAddress}: ${request.method.toUpperCase()} ${request.path} --> ${request.response.statusCode}`));
+
+  // Register routes
+  app.route(routes);
 
   return app;
 }
