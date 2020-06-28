@@ -30,7 +30,8 @@
     "@hapi/joi": "^17.1.1",
     "bitly": "^7.1.0",
     "dotenv": "^8.2.0",
-    "nexmo": "^2.7.0"
+    "nexmo": "^2.7.0",
+    "opentok": "^2.10.0"
   },
   "devDependencies": {
     "@hapi/code": "^8.0.1",
