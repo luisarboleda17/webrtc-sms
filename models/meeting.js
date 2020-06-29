@@ -5,7 +5,7 @@ module.exports = (mongoose, options) => {
   const meetingSchema = new Schema(
     {
       hostNumber: { type: String, trim: true, index: true, required: true },
-      members: [{ type: String, trim: true, index: true, required: true }],
+      friends: [{ type: String, trim: true, index: true, required: true }],
       openTokSessionId: { type: String, index: true, required: true },
     },
     options
