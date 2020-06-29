@@ -4,7 +4,7 @@ const Boom = require('@hapi/boom');
 const { BitlyClient } = require('bitly');
 
 const { group: Group, meeting: Meeting } = require('../models');
-const { opentok, group: groupService } = require('../services');
+const { opentok, group: groupService, meeting: meetingService } = require('../services');
 
 /**
  * Handle create poll from SMS
@@ -63,50 +63,56 @@ const createPollFromSMS = async (request, h) => {
  * @param h
  * @returns {{data: boolean}}
  */
-const answerPollRequest = (request, h) => {
+const answerPollRequest = async (request, h) => {
   const nexmoConfig = request.server.settings.app.nexmo;
   const pollConfig = request.server.settings.app.poll;
-
-  const answer = request.payload['text'];
-  const friendPhone = request.payload['msisdn'];
-  const hostPhoneNumber = '50764597978'; //Assuming we get it from a data source TODO: Get phone number from data source
-
-  const meetingAccepted = answer.toLowerCase() === 'yes';
-  const hostResponseMessage = meetingAccepted ? `${friendPhone} ${pollConfig.acceptAnswer}` : `${friendPhone} ${pollConfig.declineAnswer}`;
 
   const nexmo = new Nexmo({
     apiKey: nexmoConfig.apiKey,
     apiSecret: nexmoConfig.apiSecret
   }, {debug: request.server.app.env === 'local'});
 
-  // Send invitation link
-  if (meetingAccepted) {
-    const videoRoomInvitationMessage = 'You can join entering to this link: https://meet.jit.si/FM-webRTC-12345'; // TODO: Retrieve url from created video room
+  const answer = request.payload['text'];
+  const friendPhone = request.payload['msisdn'];
+  const meetingAccepted = answer.toLowerCase() === 'yes';
+  const hostResponseMessage = meetingAccepted ? `${friendPhone} ${pollConfig.acceptAnswer}` : `${friendPhone} ${pollConfig.declineAnswer}`;
+
+  try {
+    const meeting = await meetingService.getMeetingByFriendPhoneNumber(friendPhone);
+    const hostPhoneNumber = meeting.hostNumber;
+
+    // Send invitation link
+    if (meetingAccepted) {
+      const videoRoomInvitationMessage = `You can join entering to this link: https://meet.jit.si/${meeting._id}`; // TODO: Retrieve url from created video room
+      nexmo.message.sendSms(
+        nexmoConfig.senderPhoneNumber,
+        friendPhone,
+        videoRoomInvitationMessage,
+        (error, response) => {
+          if (error) {
+            // TODO: Handle send error.
+          }
+        }
+      );
+    }
+
+    // Send answer back to host TODO: Add to queue
     nexmo.message.sendSms(
       nexmoConfig.senderPhoneNumber,
-      friendPhone,
-      videoRoomInvitationMessage,
+      hostPhoneNumber,
+      hostResponseMessage,
       (error, response) => {
         if (error) {
           // TODO: Handle send error.
         }
       }
     );
+
+    return {data: true};
+  } catch(err) {
+    console.error(err);
+    return Boom.internal();
   }
-
-  // Send answer back to host
-  nexmo.message.sendSms(
-    nexmoConfig.senderPhoneNumber,
-    hostPhoneNumber,
-    hostResponseMessage,
-    (error, response) => {
-      if (error) {
-        // TODO: Handle send error.
-      }
-    }
-  );
-
-  return {data: true};
 };
 
 module.exports = {
