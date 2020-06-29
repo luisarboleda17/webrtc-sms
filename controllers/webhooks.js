@@ -27,7 +27,7 @@ const createPollFromSMS = async (request, h) => {
     // Create meeting
     const newMeeting = new Meeting({
       hostNumber,
-      friends: friendsNumbers.map(number => ({number, accepted: null})),
+      friends: friendsNumbers.map(friend => ({name: friend.name, number: friend.number, accepted: null})),
       openTokSessionId: session.sessionId
     });
     await newMeeting.save();

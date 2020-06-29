@@ -5,7 +5,10 @@ module.exports = (mongoose, options) => {
   const groupSchema = new Schema(
     {
       hostNumber: { type: String, trim: true, unique: true, index: true, required: true },
-      friends: [{ type: String, trim: true }],
+      friends: [{
+        name: { type: String, trim: true },
+        number: { type: String, trim: true }
+      }],
     },
     options
   );
