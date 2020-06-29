@@ -44,8 +44,33 @@ const getMeetingById = meetingId => new Promise(
   }
 );
 
+/**
+ * Set friend's answer
+ * @param meetingId
+ * @param phoneNumber
+ * @param accepted
+ * @returns {Promise<unknown>}
+ */
+const setFriendAnswer = (meetingId, phoneNumber, accepted) => new Promise(
+  (resolve, reject) => {
+    Meeting.update(
+      {
+        _id: meetingId,
+        'friends.number': phoneNumber
+      },
+      {$set: {'friends.$.accepted': accepted}},
+      {new: false},
+      (err, result) => {
+        if (err) return reject(err);
+        resolve(result);
+      }
+    );
+  }
+);
+
 module.exports = {
   getMeetingByFriendPhoneNumber,
   setMeetingUrl,
-  getMeetingById
+  getMeetingById,
+  setFriendAnswer
 };
