@@ -1,9 +1,8 @@
 
 const Boom = require('@hapi/boom');
-const { BitlyClient } = require('bitly');
 
 const { group: Group, meeting: Meeting } = require('../models');
-const { opentok, group: groupService, meeting: meetingService, nexmo: nexmoService } = require('../services');
+const { opentok, group: groupService, meeting: meetingService, nexmo: nexmoService, bitly: bitlyService } = require('../services');
 
 /**
  * Handle create poll from SMS
@@ -15,9 +14,7 @@ const createPollFromSMS = async (request, h) => {
   const pollConfig = request.server.settings.app.poll;
   const nexmoConfig = request.server.settings.app.nexmo;
   const opentokConfig = request.server.settings.app.opentok;
-  // const bitlyConfig = request.server.settings.app.bitly;
-
-  // const bitly = BitlyClient(bitlyConfig.accessToken, {});
+  const bitlyConfig = request.server.settings.app.bitly;
 
   const hostNumber = request.payload['msisdn'];
   const messageText = request.payload['text'];
@@ -30,6 +27,16 @@ const createPollFromSMS = async (request, h) => {
     // Create meeting
     const newMeeting = new Meeting({hostNumber, friends: friendsNumbers, openTokSessionId: session.sessionId});
     await newMeeting.save();
+
+    // Create meeting link
+    let meetingUrl = `${pollConfig.hostUrl}${newMeeting._id}`;
+    console.log(meetingUrl);
+    try {
+      meetingUrl = await bitlyService.shortUrl(bitlyConfig.accessToken, meetingUrl);
+    } catch(err) {
+      console.error('Error shortening url.', err);
+    }
+    await meetingService.setMeetingUrl(newMeeting._id, meetingUrl); // Save meeting url
 
     // TODO: Add this process to a queue
     if (nexmoConfig.sendSmsEnabled) {
@@ -66,7 +73,7 @@ const answerPollRequest = async (request, h) => {
     // Send invitation link
     if (meetingAccepted) {
       // TODO: Do not expose internal ids
-      const videoRoomInvitationMessage = `You can join entering to this link: https://meet.jit.si/${meeting._id}`; // TODO: Retrieve url from created video room
+      const videoRoomInvitationMessage = `You can join entering to this link: ${meeting.meetingURL}`;
       if (nexmoConfig.sendSmsEnabled) {
         await nexmoService.sendSMS(nexmoConfig.apiKey, nexmoConfig.apiSecret, nexmoConfig.senderPhoneNumber, friendPhone, videoRoomInvitationMessage);
       }
