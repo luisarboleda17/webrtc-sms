@@ -1,5 +1,6 @@
 
 module.exports = {
   opentok: require('./opentok'),
-  group: require('./group')
+  group: require('./group'),
+  meeting: require('./meeting')
 };
