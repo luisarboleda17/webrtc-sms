@@ -10,16 +10,13 @@ As part of the [webRTC.ventures](http://webrtc.ventures) job application, I have
 # Overview
 Friends meet is a web application focused on SMS messages interaction for manage friends list, set video-call meetings with them, and visualize their assistance. It allows you to manage your group of friends' phone numbers, make a poll to establish a video-call conference, and see who can join you or not. Only have to send an SMS message to +1 (917) 259-2031 with a pre-formatted text command to start using it.
 
-**Create a group and add a friend**
-
+**Create a group and add a friend**\
 Send an SMS message with the format `Add <name> <phone>` where name it's the name of your friend and phone it's the phone number of your friend in any international format (including country code) to create your group (if you haven't) and add your friend's phone number to it.
 
-**Create a meeting poll**
-
+**Create a meeting poll**\
 Send an SMS message containing `join me` (case insensitive) to create a meeting request. This message it's sent to your friends as it is received, and the instructions to respond are included.
 
-**Answer a poll request**
-
+**Answer a poll request**\
 Send an SMS message with `Yes` or `No` to accept or decline the meeting request. If you accept it, you will receive an invitation link to the video-call conference. Your answer it's sent back to the meeting's host.
 
 With this service and it's simple commands, people can avoid to enter to a webpage to manage meetings. They can do it all on a familiar application, sending the same messages that they send daily. So, it can increase adoption and engagement.
