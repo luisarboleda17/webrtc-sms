@@ -15,19 +15,24 @@ const generateTokenForMeeting = async (request, h) => {
 
   try {
     const meeting = await meetingService.getMeetingById(meetingId);
-    const token = await openTokService.generateToken(
-      opentokConfig.apiKey,
-      opentokConfig.apiSecret,
-      meeting.openTokSessionId,
-      'publisher'
-    );
-    return {
-      data: {
-        token,
-        sessionId: meeting.openTokSessionId,
-        apiKey: opentokConfig.apiKey
-      }
-    };
+
+    if (meeting) {
+      const token = await openTokService.generateToken(
+        opentokConfig.apiKey,
+        opentokConfig.apiSecret,
+        meeting.openTokSessionId,
+        'publisher'
+      );
+      return {
+        data: {
+          token,
+          sessionId: meeting.openTokSessionId,
+          apiKey: opentokConfig.apiKey
+        }
+      };
+    } else {
+      return Boom.notFound();
+    }
   } catch(err) {
     console.error(err);
     return Boom.internal();
