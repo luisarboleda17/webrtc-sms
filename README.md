@@ -32,15 +32,15 @@ With this service and it's simple commands, people can avoid to enter to a webpa
 
 Video-call meeting
 
-![Friends%20Meet%201a8bde00810c4fb191fd6f3aaf85dae4/Friends_management.jpg](Friends%20Meet%201a8bde00810c4fb191fd6f3aaf85dae4/Friends_management.jpg)
+![Friends management.jpg](Friends management.jpg)
 
 Friends management
 
-![Friends%20Meet%201a8bde00810c4fb191fd6f3aaf85dae4/Meeting_poll.jpg](Friends%20Meet%201a8bde00810c4fb191fd6f3aaf85dae4/Meeting_poll.jpg)
+![Meeting poll.jpg](Meeting poll.jpg)
 
 Meeting poll
 
-![Friends%20Meet%201a8bde00810c4fb191fd6f3aaf85dae4/Friend_meeting_request.jpeg](Friends%20Meet%201a8bde00810c4fb191fd6f3aaf85dae4/Friend_meeting_request.jpeg)
+![Friend meeting request.jpeg](Friend meeting request.jpeg)
 
 Friend meeting request
 
