@@ -37,7 +37,7 @@ const createPollFromSMS = async (request, h) => {
     }
     await meetingService.setMeetingUrl(newMeeting._id, meetingUrl); // Save meeting url
 
-    // TODO: Add this process to a queue
+    // TODO: Add this process to a queue and fix promise ignored
     if (nexmoConfig.sendSmsEnabled) {
       friendsNumbers.forEach(async phoneNumber => {
         await nexmoService.sendSMS(nexmoConfig.apiKey, nexmoConfig.apiSecret, nexmoConfig.senderPhoneNumber, phoneNumber, invitationMessage);
