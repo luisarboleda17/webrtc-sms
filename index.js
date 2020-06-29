@@ -1,10 +1,21 @@
 
 require('dotenv').config()
+const Mongoose = require('mongoose');
 
 const createApp = require('./app');
 
 const initApp = async () => {
   try {
+    await Mongoose.connect(
+      process.env.MONGO_DB_URI,
+      {
+        useUnifiedTopology: true,
+        useNewUrlParser: true,
+        useFindAndModify: false,
+        useCreateIndex: true,
+      }
+    );
+
     const app = createApp();
     await app.start();
 
