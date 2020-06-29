@@ -1,4 +1,5 @@
 
 module.exports = {
-  webhooks: require('./webhooks')
+  webhooks: require('./webhooks'),
+  meeting: require('./meeting')
 };

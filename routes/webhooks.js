@@ -15,12 +15,18 @@ module.exports = [
           to: Joi.string().min(4).required(),
           messageId: Joi.string().required(),
           text: Joi.alternatives().try(
-            Joi.string().min(1).trim().pattern(new RegExp('^.*join\\sme.*$')),
+            Joi.string().min(1).trim().pattern(new RegExp('^.*join\\sme.*$', 'i')),
             Joi.string().valid('yes', 'no').insensitive()
           ).required(),
           type: Joi.string().valid('text').required(),
           "api-key": Joi.string().min(4).required(),
-        }).options({ allowUnknown: true, stripUnknown: true, errors: { escapeHtml: true } }).required()
+        }).options({ allowUnknown: true, stripUnknown: true, errors: { escapeHtml: true } }).required(),
+        failAction: async (request, h, err) => {
+          if (request.server.settings.app.env === 'dev' || request.server.settings.app.env === 'local') {
+            console.error(err);
+          }
+          return Boom.badRequest();
+        }
       }
     },
     handler: (request, h) => {

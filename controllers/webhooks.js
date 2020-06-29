@@ -1,6 +1,8 @@
 
-const Nexmo = require('nexmo');
-const { BitlyClient } = require('bitly');
+const Boom = require('@hapi/boom');
+
+const { group: Group, meeting: Meeting } = require('../models');
+const { opentok, group: groupService, meeting: meetingService, nexmo: nexmoService, bitly: bitlyService } = require('../services');
 
 /**
  * Handle create poll from SMS
@@ -8,40 +10,48 @@ const { BitlyClient } = require('bitly');
  * @param h
  * @returns {{data: boolean}}
  */
-const createPollFromSMS = (request, h) => {
+const createPollFromSMS = async (request, h) => {
   const pollConfig = request.server.settings.app.poll;
   const nexmoConfig = request.server.settings.app.nexmo;
-  // const bitlyConfig = request.server.settings.app.bitly;
+  const opentokConfig = request.server.settings.app.opentok;
+  const bitlyConfig = request.server.settings.app.bitly;
 
-  const nexmo = new Nexmo({
-    apiKey: nexmoConfig.apiKey,
-    apiSecret: nexmoConfig.apiSecret
-  }, {debug: request.server.app.env === 'local'});
-  // const bitly = BitlyClient(bitlyConfig.accessToken, {});
-
+  const hostNumber = request.payload['msisdn'];
   const messageText = request.payload['text'];
   const invitationMessage = `${messageText}. ${pollConfig.pollCreationInstructions}`;
 
-  const friendsNumbers = ['50764597978']; //Assuming we get phones from a data source TODO: Get phone numbers from data source
+  try {
+    const friendsNumbers = await groupService.getFriendsByPhoneNumber(hostNumber); // Get friends numbers from database
+    const session = await opentok.createSession(opentokConfig.apiKey, opentokConfig.apiSecret);
 
-  // TODO: Create conference room and short it's url
+    // Create meeting
+    const newMeeting = new Meeting({
+      hostNumber,
+      friends: friendsNumbers.map(friend => ({name: friend.name, number: friend.number, accepted: null})),
+      openTokSessionId: session.sessionId
+    });
+    await newMeeting.save();
 
-  // Only send SMS if it's enabled
-  if (nexmoConfig.sendSmsEnabled) {
-    // Send message to number's friends TODO: Add this process to a queue
-    friendsNumbers.forEach(phoneNumber => nexmo.message.sendSms(
-      nexmoConfig.senderPhoneNumber,
-      phoneNumber,
-      invitationMessage,
-      (error, response) => {
-        if (error) {
-          // TODO: Handle send error. Resend SMS to meet host
-        }
-      }
-    ));
+    // Create meeting link
+    let meetingUrl = `${pollConfig.hostUrl}${newMeeting._id}`;
+    try {
+      meetingUrl = await bitlyService.shortUrl(bitlyConfig.accessToken, meetingUrl);
+    } catch(err) {
+      console.error('Error shortening url.', err);
+    }
+    await meetingService.setMeetingUrl(newMeeting._id, meetingUrl); // Save meeting url
+
+    // TODO: Add this process to a queue and fix promise ignored
+    if (nexmoConfig.sendSmsEnabled) {
+      friendsNumbers.forEach(async phoneNumber => {
+        await nexmoService.sendSMS(nexmoConfig.apiKey, nexmoConfig.apiSecret, nexmoConfig.senderPhoneNumber, phoneNumber, invitationMessage);
+      });
+    }
+    return {data: true};
+  } catch(err) {
+    console.error(err);
+    return Boom.internal();
   }
-
-  return {data: true};
 };
 
 /**
@@ -50,50 +60,41 @@ const createPollFromSMS = (request, h) => {
  * @param h
  * @returns {{data: boolean}}
  */
-const answerPollRequest = (request, h) => {
+const answerPollRequest = async (request, h) => {
   const nexmoConfig = request.server.settings.app.nexmo;
   const pollConfig = request.server.settings.app.poll;
 
   const answer = request.payload['text'];
   const friendPhone = request.payload['msisdn'];
-  const hostPhoneNumber = '50764597978'; //Assuming we get it from a data source TODO: Get phone number from data source
-
   const meetingAccepted = answer.toLowerCase() === 'yes';
   const hostResponseMessage = meetingAccepted ? `${friendPhone} ${pollConfig.acceptAnswer}` : `${friendPhone} ${pollConfig.declineAnswer}`;
 
-  const nexmo = new Nexmo({
-    apiKey: nexmoConfig.apiKey,
-    apiSecret: nexmoConfig.apiSecret
-  }, {debug: request.server.app.env === 'local'});
+  try {
+    const meeting = await meetingService.getMeetingByFriendPhoneNumber(friendPhone);
+    const hostPhoneNumber = meeting.hostNumber;
 
-  // Send invitation link
-  if (meetingAccepted) {
-    const videoRoomInvitationMessage = 'You can join entering to this link: https://meet.jit.si/FM-webRTC-12345'; // TODO: Retrieve url from created video room
-    nexmo.message.sendSms(
-      nexmoConfig.senderPhoneNumber,
-      friendPhone,
-      videoRoomInvitationMessage,
-      (error, response) => {
-        if (error) {
-          // TODO: Handle send error.
-        }
-      }
-    );
-  }
-
-  // Send answer back to host
-  nexmo.message.sendSms(
-    nexmoConfig.senderPhoneNumber,
-    hostPhoneNumber,
-    hostResponseMessage,
-    (error, response) => {
-      if (error) {
-        // TODO: Handle send error.
+    // Send invitation link
+    if (meetingAccepted) {
+      // TODO: Do not expose internal ids
+      const videoRoomInvitationMessage = `You can join entering to this link: ${meeting.meetingURL}`;
+      if (nexmoConfig.sendSmsEnabled) {
+        await nexmoService.sendSMS(nexmoConfig.apiKey, nexmoConfig.apiSecret, nexmoConfig.senderPhoneNumber, friendPhone, videoRoomInvitationMessage);
       }
     }
-  );
 
-  return {data: true};
+    // Save answer
+    await meetingService.setFriendAnswer(meeting._id, friendPhone, meetingAccepted);
+
+    // Send SMS back
+    if (nexmoConfig.sendSmsEnabled) {
+      await nexmoService.sendSMS(nexmoConfig.apiKey, nexmoConfig.apiSecret, nexmoConfig.senderPhoneNumber, hostPhoneNumber, hostResponseMessage);
+    }
+
+    return {data: true};
+  } catch(err) {
+    console.error(err);
+    return Boom.internal();
+  }
 };
 
 module.exports = {

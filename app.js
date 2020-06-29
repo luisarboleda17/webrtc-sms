@@ -17,7 +17,8 @@ module.exports = (config = null) => {
   const app = Hapi.server({
     port: process.env.PORT || 3000,
     host: process.env.HOST || 'localhost',
-    app: appConfig
+    routes: { cors: { origin: ['http://localhost:3000', 'https://d2epvz9zqrz4md.cloudfront.net/', 'http://webrtc-sms-front.s3-website.us-east-2.amazonaws.com/'] } },
+    app: appConfig,
   });
 
   // Add requests logging
