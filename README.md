@@ -125,46 +125,25 @@ Friends Meet was developed and maintained by Luis Arboleda. You can stay in touc
 
 # Resources
 
-1. Inbound SMS API documentation
+1. [Inbound SMS API documentation](https://developer.nexmo.com/api/sms#inbound-sms)
 
-    [](https://developer.nexmo.com/api/sms#inbound-sms)
+2. [Inbound SMS code snippet](https://developer.nexmo.com/messages/code-snippets/inbound-message)
 
-2. Inbound SMS code snippet
+3. [Receiving an SMS example](https://developer.nexmo.com/messaging/sms/code-snippets/receiving-an-sms)
 
-    [](https://developer.nexmo.com/messages/code-snippets/inbound-message)
+4. [Signature verification for Nexmo web-hooks](https://developer.nexmo.com/messages/concepts/signed-webhooks)
 
-3. Receiving an SMS example
+5. [Nexmo phone number specification](https://developer.nexmo.com/messaging/sms/guides/country-specific-features#country-specific-features)
 
-    [](https://developer.nexmo.com/messaging/sms/code-snippets/receiving-an-sms)
+6. [Exposing secrets on GitHub: What to do after leaking credentials and API keys](https://blog.gitguardian.com/leaking-secrets-on-github-what-to-do/)
 
-4. Signature verification for Nexmo web-hooks
+7. [Bit.ly](http://bit.ly) Node's package documentation](https://www.npmjs.com/package/bitly)
 
-    [](https://developer.nexmo.com/messages/concepts/signed-webhooks)
+8. [OpenTok / Vonage Video API Basics](https://tokbox.com/developer/guides/basics/)
 
-5. Nexmo phone number specification
+9. [OpenTok Node's package documentation](https://github.com/opentok/opentok-react#otsession-component)
 
-    [](https://developer.nexmo.com/messaging/sms/guides/country-specific-features#country-specific-features)
+10. [Set a Lets Encrypt certificate on AWS load balancer](https://blog.alejandrocelaya.com/2016/08/16/setup-a-lets-encrypt-certificate-in-a-aws-elastic-load-balancer/)
 
-6. What to do after leaking credentials
+11. [opentok/opentok-react](https://github.com/opentok/opentok-react/blob/master/src/OTPublisher.js#L115)
 
-    [Exposing secrets on GitHub: What to do after leaking credentials and API keys](https://blog.gitguardian.com/leaking-secrets-on-github-what-to-do/)
-
-7. [Bit.ly](http://bit.ly) Node's package documentation
-
-    [](https://www.npmjs.com/package/bitly)
-
-8. OpenTok / Vonage Video API Basics
-
-    [](https://tokbox.com/developer/guides/basics/)
-
-9. OpenTok Node's package documentation
-
-    [](https://github.com/opentok/opentok-react#otsession-component)
-
-10. Set a Lets Encrypt certificate on AWS load balancer
-
-    [](https://blog.alejandrocelaya.com/2016/08/16/setup-a-lets-encrypt-certificate-in-a-aws-elastic-load-balancer/)
-
-11. OpenTok / Vonage video container style's hack
-
-    [opentok/opentok-react](https://github.com/opentok/opentok-react/blob/master/src/OTPublisher.js#L115)
