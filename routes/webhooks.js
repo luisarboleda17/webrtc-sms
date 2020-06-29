@@ -16,7 +16,8 @@ module.exports = [
           messageId: Joi.string().required(),
           text: Joi.alternatives().try(
             Joi.string().min(1).trim().pattern(new RegExp('^.*join\\sme.*$', 'i')),
-            Joi.string().valid('yes', 'no').insensitive()
+            Joi.string().valid('yes', 'no').insensitive(),
+            Joi.string().min(1).trim().pattern(new RegExp('^Add\\s([a-zA-Z]+)?\\s(.*)?$', 'i'))
           ).required(),
           type: Joi.string().valid('text').required(),
           "api-key": Joi.string().min(4).required(),
@@ -42,6 +43,8 @@ module.exports = [
         // Route to controller
         if (messageText.includes(pollConfig.pollCreateKeyword)) {
           return webhooksControllers.createPollFromSMS(request, h);
+        } else if (messageText.includes('add')) {
+          return webhooksControllers.addUserToGroup(request, h);
         } else if (messageText === 'yes' || messageText === 'no') {
           return webhooksControllers.answerPollRequest(request, h);
         } else {

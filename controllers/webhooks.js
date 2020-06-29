@@ -5,6 +5,31 @@ const { group: Group, meeting: Meeting } = require('../models');
 const { opentok, group: groupService, meeting: meetingService, nexmo: nexmoService, bitly: bitlyService } = require('../services');
 
 /**
+ * Add user to group of friends
+ * @param request
+ * @param h
+ * @returns {Promise<{data: boolean}|Boom<unknown>>}
+ */
+const addUserToGroup = async (request, h) => {
+  const nexmoConfig = request.server.settings.app.nexmo;
+
+  const hostNumber = request.payload['msisdn'];
+  const messageText = request.payload['text'];
+
+  const messageMatch = messageText.match(/^Add\s([a-zA-Z]+)?\s(.*)?$/i);
+  const friendName = messageMatch[1];
+  const friendPhone = messageMatch[2].replace(/[- )\s(\+]/gi, '');
+
+  try {
+    await groupService.addFriendToGroup(hostNumber, friendPhone, friendName);
+    return {data: true};
+  } catch(err) {
+    console.error(err);
+    return Boom.internal();
+  }
+};
+
+/**
  * Handle create poll from SMS
  * @param request
  * @param h
@@ -98,6 +123,7 @@ const answerPollRequest = async (request, h) => {
 };
 
 module.exports = {
+  addUserToGroup,
   createPollFromSMS,
   answerPollRequest
 };
