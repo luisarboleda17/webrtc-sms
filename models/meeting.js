@@ -6,7 +6,8 @@ module.exports = (mongoose, options) => {
     {
       hostNumber: { type: String, trim: true, index: true, required: true },
       friends: [{ type: String, trim: true, index: true, required: true }],
-      openTokSessionId: { type: String, index: true, required: true },
+      openTokSessionId: { type: String, required: true },
+      meetingURL: { type: String, index: true, required: false}
     },
     options
   );

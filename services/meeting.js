@@ -15,6 +15,22 @@ const getMeetingByFriendPhoneNumber = (friendPhoneNumber) => new Promise(
   }
 );
 
+/**
+ * Set meeting url by
+ * @param meetingId
+ * @param meetingUrl
+ * @returns {Promise<unknown>}
+ */
+const setMeetingUrl = (meetingId, meetingUrl) => new Promise(
+  (resolve, reject) => {
+    Meeting.findByIdAndUpdate(meetingId, {meetingURL: meetingUrl}, {new: false}, (err, meeting) => {
+      if (err) return reject(err);
+      resolve(meeting);
+    });
+  }
+);
+
 module.exports = {
-  getMeetingByFriendPhoneNumber
+  getMeetingByFriendPhoneNumber,
+  setMeetingUrl
 };
