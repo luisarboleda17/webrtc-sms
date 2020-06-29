@@ -1,6 +1,10 @@
 
 const Nexmo = require('nexmo');
+const Boom = require('@hapi/boom');
 const { BitlyClient } = require('bitly');
+
+const { group: Group, meeting: Meeting } = require('../models');
+const { opentok, group: groupService } = require('../services');
 
 /**
  * Handle create poll from SMS
@@ -8,9 +12,10 @@ const { BitlyClient } = require('bitly');
  * @param h
  * @returns {{data: boolean}}
  */
-const createPollFromSMS = (request, h) => {
+const createPollFromSMS = async (request, h) => {
   const pollConfig = request.server.settings.app.poll;
   const nexmoConfig = request.server.settings.app.nexmo;
+  const opentokConfig = request.server.settings.app.opentok;
   // const bitlyConfig = request.server.settings.app.bitly;
 
   const nexmo = new Nexmo({
@@ -19,29 +24,37 @@ const createPollFromSMS = (request, h) => {
   }, {debug: request.server.app.env === 'local'});
   // const bitly = BitlyClient(bitlyConfig.accessToken, {});
 
+  const hostNumber = request.payload['msisdn'];
   const messageText = request.payload['text'];
   const invitationMessage = `${messageText}. ${pollConfig.pollCreationInstructions}`;
 
-  const friendsNumbers = ['50764597978']; //Assuming we get phones from a data source TODO: Get phone numbers from data source
+  try {
+    const friendsNumbers = await groupService.getFriendsByPhoneNumber(hostNumber); // Get friends numbers from database
+    const session = await opentok.createSession(opentokConfig.apiKey, opentokConfig.apiSecret);
 
-  // TODO: Create conference room and short it's url
+    // Create meeting
+    const newMeeting = new Meeting({hostNumber, friends: friendsNumbers, openTokSessionId: session.sessionId});
+    await newMeeting.save();
 
-  // Only send SMS if it's enabled
-  if (nexmoConfig.sendSmsEnabled) {
-    // Send message to number's friends TODO: Add this process to a queue
-    friendsNumbers.forEach(phoneNumber => nexmo.message.sendSms(
-      nexmoConfig.senderPhoneNumber,
-      phoneNumber,
-      invitationMessage,
-      (error, response) => {
-        if (error) {
-          // TODO: Handle send error. Resend SMS to meet host
+    // TODO: Add this process to a queue
+    if (nexmoConfig.sendSmsEnabled) {
+      // Send message to number's friends
+      friendsNumbers.forEach(phoneNumber => nexmo.message.sendSms(
+        nexmoConfig.senderPhoneNumber,
+        phoneNumber,
+        invitationMessage,
+        (error, response) => {
+          if (error) {
+            // TODO: Handle send error. Resend SMS to meet host
+          }
         }
-      }
-    ));
+      ));
+    }
+    return {data: true};
+  } catch(err) {
+    console.error(err);
+    return Boom.internal();
   }
-
-  return {data: true};
 };
 
 /**
