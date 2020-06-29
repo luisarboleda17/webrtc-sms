@@ -21,7 +21,13 @@ const generateTokenForMeeting = async (request, h) => {
       meeting.openTokSessionId,
       'publisher'
     );
-    return { data: { token } };
+    return {
+      data: {
+        token,
+        sessionId: meeting.openTokSessionId,
+        apiKey: opentokConfig.apiKey
+      }
+    };
   } catch(err) {
     console.error(err);
     return Boom.internal();
