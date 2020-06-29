@@ -53,7 +53,7 @@ const getMeetingById = meetingId => new Promise(
  */
 const setFriendAnswer = (meetingId, phoneNumber, accepted) => new Promise(
   (resolve, reject) => {
-    Meeting.update(
+    Meeting.updateOne(
       {
         _id: meetingId,
         'friends.number': phoneNumber
