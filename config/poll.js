@@ -7,5 +7,5 @@ module.exports = {
   pollCreationInstructions: 'Please respond with Yes or No if you can join me!',
   acceptAnswer: 'accepted.',
   declineAnswer: 'declined.',
-  hostUrl: 'https://d2epvz9zqrz4md.cloudfront.net/'
+  hostUrl: 'https://fm.larboleda.io/'
 };
