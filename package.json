@@ -1,0 +1,42 @@
+{
+  "name": "friends-meet",
+  "version": "1.0.0",
+  "description": "Friends meet application for webRTC.ventures coding challenge",
+  "main": "index.js",
+  "scripts": {
+    "local": "nodemon index.js",
+    "test": "lab -c -v **/*.test.js",
+    "test-coverage-html": "lab -r html -o coverage.html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/luisarboleda17/webrtc-sms.git"
+  },
+  "keywords": [
+    "webrtc",
+    "sms",
+    "vonage",
+    "nexmo"
+  ],
+  "author": "Luis Arboleda",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/luisarboleda17/webrtc-sms/issues"
+  },
+  "homepage": "https://github.com/luisarboleda17/webrtc-sms#readme",
+  "dependencies": {
+    "@hapi/boom": "^9.1.0",
+    "@hapi/hapi": "^19.1.1",
+    "@hapi/joi": "^17.1.1",
+    "bitly": "^7.1.0",
+    "dotenv": "^8.2.0",
+    "mongoose": "^5.9.20",
+    "nexmo": "^2.7.0",
+    "opentok": "^2.10.0"
+  },
+  "devDependencies": {
+    "@hapi/code": "^8.0.1",
+    "@hapi/lab": "^22.0.4",
+    "nodemon": "^2.0.4"
+  }
+}
