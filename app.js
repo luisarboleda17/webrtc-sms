@@ -17,7 +17,8 @@ module.exports = (config = null) => {
   const app = Hapi.server({
     port: process.env.PORT || 3000,
     host: process.env.HOST || 'localhost',
-    app: appConfig
+    routes: { cors: { origin: ['http://localhost:3000'] } },
+    app: appConfig,
   });
 
   // Add requests logging
