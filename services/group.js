@@ -15,6 +15,27 @@ const getFriendsByPhoneNumber = (phoneNumber) => new Promise(
   }
 );
 
+/**
+ * Add friend to group
+ * @param hostPhone
+ * @param friendPhone
+ * @param friendName
+ * @returns {Promise<unknown>}
+ */
+const addFriendToGroup = (hostPhone, friendPhone, friendName) => new Promise(
+  (resolve, reject) => {
+    Group.findOneAndUpdate(
+      {hostNumber: hostPhone},
+      {$push: { friends: { name: friendName, number: friendPhone } }},
+      {upsert: true, new: true},
+      (err, group) => {
+        if (err) return reject(err);
+        resolve(group);
+    });
+  }
+);
+
 module.exports = {
-  getFriendsByPhoneNumber
+  getFriendsByPhoneNumber,
+  addFriendToGroup
 };
