@@ -39,6 +39,36 @@ const generateTokenForMeeting = async (request, h) => {
   }
 };
 
+/**
+ * Get friend's info of meeting
+ * @param request
+ * @param h
+ * @returns {Promise<Boom<unknown>|{data: {phone: *, name: *, accepted: (null|{type: BooleanConstructor, required: boolean})}[]}>}
+ */
+const getMeetingFriends = async (request, h) => {
+  const meetingId = request.params.meetingId;
+
+  try {
+    const meeting = await meetingService.getMeetingById(meetingId);
+
+    if (meeting) {
+      return {
+        data: meeting.friends.map(friend => ({
+          name: friend.name,
+          phone: friend.number,
+          accepted: friend.accepted
+        }))
+      };
+    } else {
+      return Boom.notFound();
+    }
+  } catch(err) {
+    console.error(err);
+    return Boom.internal();
+  }
+};
+
 module.exports = {
-  generateTokenForMeeting
+  generateTokenForMeeting,
+  getMeetingFriends
 };
