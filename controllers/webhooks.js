@@ -68,8 +68,8 @@ const createPollFromSMS = async (request, h) => {
 
     // TODO: Add this process to a queue and fix promise ignored
     if (nexmoConfig.sendSmsEnabled) {
-      friendsNumbers.forEach(async phoneNumber => {
-        await nexmoService.sendSMS(nexmoConfig.apiKey, nexmoConfig.apiSecret, nexmoConfig.senderPhoneNumber, phoneNumber, invitationMessage);
+      friendsNumbers.forEach(async friend => {
+        await nexmoService.sendSMS(nexmoConfig.apiKey, nexmoConfig.apiSecret, nexmoConfig.senderPhoneNumber, friend.number, invitationMessage);
       });
     }
     return {data: true};
