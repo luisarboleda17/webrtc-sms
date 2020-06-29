@@ -8,7 +8,7 @@ const { meeting: Meeting } = require('../models');
  */
 const getMeetingByFriendPhoneNumber = (friendPhoneNumber) => new Promise(
   (resolve, reject) => {
-    Meeting.findOne({'friends.number': friendPhoneNumber}, {}, { sort: { 'created_at' : -1 } }, (err, meeting) => {
+    Meeting.findOne({'friends.number': friendPhoneNumber}, {}, { sort: { 'createdAt' : -1 } }, (err, meeting) => {
       if (err) return reject(err);
       resolve(meeting);
     });

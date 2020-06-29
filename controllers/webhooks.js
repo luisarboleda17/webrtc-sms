@@ -20,8 +20,14 @@ const addUserToGroup = async (request, h) => {
   const friendName = messageMatch[1];
   const friendPhone = messageMatch[2].replace(/[- )\s(\+]/gi, '');
 
+  const backMessage = `${friendName} (${messageMatch[2]}) added to your list.`;
+
   try {
     await groupService.addFriendToGroup(hostNumber, friendPhone, friendName);
+
+    // Inform user back
+    await nexmoService.sendSMS(nexmoConfig.apiKey, nexmoConfig.apiSecret, nexmoConfig.senderPhoneNumber, hostNumber, backMessage);
+
     return {data: true};
   } catch(err) {
     console.error(err);
@@ -43,7 +49,7 @@ const createPollFromSMS = async (request, h) => {
 
   const hostNumber = request.payload['msisdn'];
   const messageText = request.payload['text'];
-  const invitationMessage = `${messageText}. ${pollConfig.pollCreationInstructions}`;
+  const invitationMessage = `${messageText}. ${pollConfig.pollCreationInstructions}. +${nexmoConfig.senderPhoneNumber}`;
 
   try {
     const friendsNumbers = await groupService.getFriendsByPhoneNumber(hostNumber); // Get friends numbers from database
@@ -68,6 +74,10 @@ const createPollFromSMS = async (request, h) => {
 
     // TODO: Add this process to a queue and fix promise ignored
     if (nexmoConfig.sendSmsEnabled) {
+      // Send meeting link
+      await nexmoService.sendSMS(nexmoConfig.apiKey, nexmoConfig.apiSecret, nexmoConfig.senderPhoneNumber, hostNumber, `You can join entering to this link: ${meetingUrl}`);
+
+      // Send invitation link to friends
       friendsNumbers.forEach(async friend => {
         await nexmoService.sendSMS(nexmoConfig.apiKey, nexmoConfig.apiSecret, nexmoConfig.senderPhoneNumber, friend.number, invitationMessage);
       });
@@ -92,11 +102,14 @@ const answerPollRequest = async (request, h) => {
   const answer = request.payload['text'];
   const friendPhone = request.payload['msisdn'];
   const meetingAccepted = answer.toLowerCase() === 'yes';
-  const hostResponseMessage = meetingAccepted ? `${friendPhone} ${pollConfig.acceptAnswer}` : `${friendPhone} ${pollConfig.declineAnswer}`;
 
   try {
     const meeting = await meetingService.getMeetingByFriendPhoneNumber(friendPhone);
     const hostPhoneNumber = meeting.hostNumber;
+    const friendInfo = meeting.friends.find(friend => friend.number === friendPhone);
+    const friendMessageHeader = friendInfo && friendInfo.name ? `${friendInfo.name} (${friendPhone})` : friendPhone;
+
+    const hostResponseMessage = meetingAccepted ? `${friendMessageHeader} ${pollConfig.acceptAnswer}` : `${friendMessageHeader} ${pollConfig.declineAnswer}`;
 
     // Send invitation link
     if (meetingAccepted) {
