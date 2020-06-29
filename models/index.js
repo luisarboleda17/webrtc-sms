@@ -11,5 +11,6 @@ const modelOptions = {
 };
 
 module.exports = {
-  meeting: require('./meeting')(Mongoose, modelOptions)
+  meeting: require('./meeting')(Mongoose, modelOptions),
+  group: require('./group')(Mongoose, modelOptions)
 };
