@@ -25,7 +25,11 @@ const createPollFromSMS = async (request, h) => {
     const session = await opentok.createSession(opentokConfig.apiKey, opentokConfig.apiSecret);
 
     // Create meeting
-    const newMeeting = new Meeting({hostNumber, friends: friendsNumbers, openTokSessionId: session.sessionId});
+    const newMeeting = new Meeting({
+      hostNumber,
+      friends: friendsNumbers.map(number => ({number, accepted: null})),
+      openTokSessionId: session.sessionId
+    });
     await newMeeting.save();
 
     // Create meeting link
@@ -77,6 +81,9 @@ const answerPollRequest = async (request, h) => {
         await nexmoService.sendSMS(nexmoConfig.apiKey, nexmoConfig.apiSecret, nexmoConfig.senderPhoneNumber, friendPhone, videoRoomInvitationMessage);
       }
     }
+
+    // Save answer
+    await meetingService.setFriendAnswer(meeting._id, friendPhone, meetingAccepted);
 
     // Send SMS back
     if (nexmoConfig.sendSmsEnabled) {
