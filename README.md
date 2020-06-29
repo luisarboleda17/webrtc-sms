@@ -11,25 +11,34 @@ As part of the [webRTC.ventures](http://webrtc.ventures) job application, I have
 Friends meet is a web application focused on SMS messages interaction for manage friends list, set video-call meetings with them, and visualize their assistance. It allows you to manage your group of friends' phone numbers, make a poll to establish a video-call conference, and see who can join you or not. Only have to send an SMS message to +1 (917) 259-2031 with a pre-formatted text command to start using it.
 
 **Create a group and add a friend**
+
 Send an SMS message with the format `Add <name> <phone>` where name it's the name of your friend and phone it's the phone number of your friend in any international format (including country code) to create your group (if you haven't) and add your friend's phone number to it.
+
 **Create a meeting poll**
+
 Send an SMS message containing `join me` (case insensitive) to create a meeting request. This message it's sent to your friends as it is received, and the instructions to respond are included.
+
 **Answer a poll request**
+
 Send an SMS message with `Yes` or `No` to accept or decline the meeting request. If you accept it, you will receive an invitation link to the video-call conference. Your answer it's sent back to the meeting's host.
 
 With this service and it's simple commands, people can avoid to enter to a webpage to manage meetings. They can do it all on a familiar application, sending the same messages that they send daily. So, it can increase adoption and engagement.
 
 ## Application Screenshots
 ![Friends%20Meet%201a8bde00810c4fb191fd6f3aaf85dae4/App_screenshot.png](Friends%20Meet%201a8bde00810c4fb191fd6f3aaf85dae4/App_screenshot.png)
+
 Video-call meeting
 
 ![Friends%20Meet%201a8bde00810c4fb191fd6f3aaf85dae4/Friends_management.jpg](Friends%20Meet%201a8bde00810c4fb191fd6f3aaf85dae4/Friends_management.jpg)
+
 Friends management
 
 ![Friends%20Meet%201a8bde00810c4fb191fd6f3aaf85dae4/Meeting_poll.jpg](Friends%20Meet%201a8bde00810c4fb191fd6f3aaf85dae4/Meeting_poll.jpg)
+
 Meeting poll
 
 ![Friends%20Meet%201a8bde00810c4fb191fd6f3aaf85dae4/Friend_meeting_request.jpeg](Friends%20Meet%201a8bde00810c4fb191fd6f3aaf85dae4/Friend_meeting_request.jpeg)
+
 Friend meeting request
 
 ---
@@ -79,6 +88,7 @@ I learned to integrate [Bit.ly](http://bit.ly) and OpenTok services. Bit.ly has 
 Also, I learned to generate a free SSL certificate with Letsencrypt. I have done it before, but with AWS ACM.
 
 **Exposed API key and API secret**
+
 When I was integrating Nexmo / Vonage, I pushed my git repository to Github and accidentally, I exposed API key and API secret. Thanks to GitGuardian, I noticed it, cleaned the git history, invalidated API secret, and recreated the Github repository.
 I have never passed through this. I'am very careful with private information of APIs.
 
